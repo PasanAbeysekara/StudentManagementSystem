@@ -9,10 +9,10 @@ namespace SMS3
 	public class Menu
 	{
 		public string Prompt { get; set; }
-		public string[] Options { get; set; }
+		public List<string> Options { get; set; }
 		public int SelectedIndex { get; set; }
 
-		public Menu(string prompt, string[] options)
+		public Menu(string prompt, List<string> options)
 		{
 			Prompt = prompt;
 			Options = options;
@@ -22,7 +22,7 @@ namespace SMS3
 		private void DisplayOptions()
 		{
 			Console.WriteLine(Prompt);
-			for (int i = 0; i < Options.Length; i++)
+			for (int i = 0; i < Options.Count; i++)
 			{
 				Console.ForegroundColor = ConsoleColor.White;
 				Console.BackgroundColor = ConsoleColor.Black;
@@ -59,12 +59,12 @@ namespace SMS3
 				{
 					case ConsoleKey.UpArrow:
 						SelectedIndex--;
-						if (SelectedIndex < 0) SelectedIndex = Options.Length - 1;
+						if (SelectedIndex < 0) SelectedIndex = Options.Count - 1;
 						break;
 
 					case ConsoleKey.DownArrow:
 						SelectedIndex++;
-						if (SelectedIndex == Options.Length) SelectedIndex = 0;
+						if (SelectedIndex == Options.Count) SelectedIndex = 0;
 						break;
 				}
 

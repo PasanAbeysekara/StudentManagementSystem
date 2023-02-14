@@ -8,6 +8,19 @@ namespace SMS3
 {
 	public class App
 	{
+		public List<User> users { get; set; }
+		public List<Module> modules { get; set; }
+
+		public App()
+		{
+			Module m1 = new Module("1","EE3301","3");
+			Module m2 = new Module("2", "CE3201", "2");
+			Module m3 = new Module("3", "ME3305", "3");
+			Module m4 = new Module("4", "IS3201", "2");
+			users = new List<User> { };
+			modules = new List<Module> { m1, m2, m3, m4};
+		}
+
 		public void Start()
 		{
 			Console.Title = "Student Management System";
@@ -25,7 +38,7 @@ Welcome to the Student Management System ! What would you like to do ?
 (Use the arrow keys to cycle through options and press enter to select an option.)
 ";
 
-			string[] options = { "Add User", "Select User", "Delete User","Display All Users","Quit" };
+			List<string> options = new List<string> { "Add User", "Select User", "Delete User","Display All Users","Quit" };
 			Menu menu = new Menu(prompt, options);
 			int selectedIndex = menu.Run();
 
@@ -55,9 +68,10 @@ Welcome to the Student Management System ! What would you like to do ?
 			Console.Clear();
 			Console.WriteLine("<< Add User >>");
 			Console.WriteLine("First Name: ");
+			string fname="", lname="", dob = "", address = "", modules_indexes = "";
 			try
 			{
-				string fname = Console.ReadLine();
+				fname = Console.ReadLine();
 			}
 			catch(Exception ex)
 			{
@@ -66,7 +80,7 @@ Welcome to the Student Management System ! What would you like to do ?
 			Console.WriteLine("Last Name: ");
 			try
 			{
-				string lname = Console.ReadLine();
+				lname = Console.ReadLine();
 			}
 			catch (Exception ex)
 			{
@@ -75,7 +89,7 @@ Welcome to the Student Management System ! What would you like to do ?
 			Console.WriteLine("Date of Birth: ");
 			try
 			{
-				string dob = Console.ReadLine();
+				dob = Console.ReadLine();
 			}
 			catch (Exception ex)
 			{
@@ -84,16 +98,16 @@ Welcome to the Student Management System ! What would you like to do ?
 			Console.WriteLine("Address:");
 			try
 			{
-				string address = Console.ReadLine();
+				address = Console.ReadLine();
 			}
 			catch (Exception ex)
 			{
 				Console.WriteLine("Invalid value entered !");
 			}
-			Console.WriteLine("Modules enrolled (1:EE3301, 2:EE3305, 3:EE330, 4:IS3401) . Enter them space separately (eg: 2 3):");
+			Console.WriteLine("Modules enrolled (1:EE3301, 2:CE3201, 3:ME3305, 4:IS3201) . Enter them space separately (eg: 2 3):");
 			try
 			{
-				string modules_indexes = Console.ReadLine();
+				modules_indexes = Console.ReadLine();
 			}
 			catch (Exception ex)
 			{
@@ -111,6 +125,19 @@ Welcome to the Student Management System ! What would you like to do ?
 			update 'users' array
 
 			 */
+			User user = new User(fname,lname,dob,address);
+			
+			string[] modules_idxs = modules_indexes.Split(null);
+			
+			foreach(string mod in modules_idxs)
+			{
+				foreach(Module mod2 in modules)
+				{
+					if(mod==mod2.Id) user.Modules.Add(mod2);
+				}
+			}
+
+			users.Add(user);
 
 			Console.WriteLine("\npress any key to go back to main menu...");
 			Console.ReadKey(true);
@@ -126,7 +153,7 @@ Welcome to the Student Management System ! What would you like to do ?
 
 ";
 			// user 'Users' objects array
-			string[] options = {"User 1", "User 2", "User 3"};
+			List<string> options = new List<string> {"User 1", "User 2", "User 3"};
 			Menu menu = new Menu(prompt, options);
 			int selectedIndex = menu.Run();
 			UserN(selectedIndex);
@@ -140,7 +167,7 @@ Welcome to the Student Management System ! What would you like to do ?
 << User >>
 
 ";
-			string[] options = { "Modify User","Add Modules","Remove Modules","Delete User","Back" };
+			List<string> options = new List<string> { "Modify User","Add Modules","Remove Modules","Delete User","Back" };
 			Menu menu = new Menu(prompt,options);
 			int selectedIndex = menu.Run();
 			switch(selectedIndex)
@@ -262,7 +289,7 @@ Welcome to the Student Management System ! What would you like to do ?
 
 ";
 			// user 'Module' objects array of particular user
-			string[] options = { "Module 2", "Module 4" };
+			List<string> options = new List<string> { "Module 2", "Module 4" };
 			Menu menu = new Menu(prompt, options);
 			int selectedIndex = menu.Run();
 
@@ -281,7 +308,6 @@ Welcome to the Student Management System ! What would you like to do ?
 			update 'users'
 			
 			*/
-
 			RunMainMenu();
 
 		}
@@ -302,7 +328,13 @@ Welcome to the Student Management System ! What would you like to do ?
 
 ";
 			// user 'Users' objects array
-			string[] options = { "User 1", "User 2", "User 3" };
+			List<string> options = new List<string> { };
+			foreach (User user_ in users)
+			{
+				options.Add(user_.FirstName + " " + user_.LastName);
+			}
+			options.Add("Back to Main Menu");
+
 			Menu menu = new Menu(prompt, options);
 			int selectedIndex = menu.Run();
 
@@ -313,6 +345,10 @@ Welcome to the Student Management System ! What would you like to do ?
 			remove 'user' from 'users' array
 
 			 */
+			if (selectedIndex != options.Count-1)
+			{
+				users.RemoveAt(selectedIndex);
+			}
 			RunMainMenu();
 		}
 		// Main Menu
@@ -322,17 +358,33 @@ Welcome to the Student Management System ! What would you like to do ?
 
 			/*
 			
-				string modules_str="";
-				foreach(Module mod:modules){
-					modules += mod.Name;
-					modules += " "; 
-				}
 				
 				foreach(User user : Users){
+					string modules_str="";
+					foreach(Module mod:user.modules){
+						modules_str += mod.Name;
+						modules_str += " "; 
+					}
 					Console.WriteLine($"{user.FirstName}\t{user.LastName}\t{user.DateOfBirth}\t{user.Address}\t{modules_str}")
 				}
 
 			 */
+
+
+			Console.WriteLine("FirstName\tLastName\tDateOfBirth\tAddress\tModules");
+			foreach (User user in users)
+			{
+				string modules_str = "";
+				foreach(Module mod in user.Modules)
+				{
+					modules_str += mod.Name;
+					modules_str += " ";
+				}
+
+				Console.WriteLine($"{user.FirstName}\t{user.LastName}\t{user.DateOfBirth}\t{user.Address}\t{modules_str}");
+			}
+
+
 
 			Console.WriteLine("\npress any key to go back to main menu...");
 			Console.ReadKey(true);
