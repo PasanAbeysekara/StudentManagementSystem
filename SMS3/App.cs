@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -153,11 +154,17 @@ Welcome to the Student Management System ! What would you like to do ?
 
 ";
 			// user 'Users' objects array
-			List<string> options = new List<string> {"User 1", "User 2", "User 3"};
+			List<string> options = new List<string> { };
+			foreach (User user_ in users)
+			{
+				options.Add(user_.FirstName + " " + user_.LastName);
+			}
+			options.Add("Back to Main Menu");
+			//List<string> options = new List<string> {"User 1", "User 2", "User 3"};
 			Menu menu = new Menu(prompt, options);
 			int selectedIndex = menu.Run();
-			UserN(selectedIndex);
-
+			if (selectedIndex == options.Count - 1) RunMainMenu();
+			else UserN(selectedIndex);
 		}
 		
 		private void UserN(int idx)
@@ -196,9 +203,10 @@ Welcome to the Student Management System ! What would you like to do ?
 			Console.Clear();
 			Console.WriteLine("<< Modify User >>");
 			Console.WriteLine("First Name\t: ");
+			string fname = "", lname = "", dob = "", address = "", modules_indexes = "";
 			try
 			{
-				string fname = Console.ReadLine();
+				fname = Console.ReadLine();
 			}
 			catch (Exception ex)
 			{
@@ -207,7 +215,7 @@ Welcome to the Student Management System ! What would you like to do ?
 			Console.WriteLine("Last Name\t: ");
 			try
 			{
-				string lname = Console.ReadLine();
+				lname = Console.ReadLine();
 			}
 			catch (Exception ex)
 			{
@@ -216,7 +224,7 @@ Welcome to the Student Management System ! What would you like to do ?
 			Console.WriteLine("Date of Birth\t: ");
 			try
 			{
-				string dob = Console.ReadLine();
+				dob = Console.ReadLine();
 			}
 			catch (Exception ex)
 			{
@@ -225,7 +233,16 @@ Welcome to the Student Management System ! What would you like to do ?
 			Console.WriteLine("Address\t:");
 			try
 			{
-				string address = Console.ReadLine();
+				address = Console.ReadLine();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine("Invalid value entered !");
+			}
+			Console.WriteLine("Modules enrolled (1:EE3301, 2:CE3201, 3:ME3305, 4:IS3201) . Enter them space separately (eg: 2 3):");
+			try
+			{
+				modules_indexes = Console.ReadLine();
 			}
 			catch (Exception ex)
 			{
@@ -241,6 +258,21 @@ Welcome to the Student Management System ! What would you like to do ?
 			
 			*/
 
+			users[idx].FirstName = fname;
+			users[idx].LastName = lname;
+			users[idx].DateOfBirth = dob;
+			users[idx].Address = address;
+
+			string[] modules_idxs = modules_indexes.Split(null);
+
+			users[idx].Modules = new List<Module> { };
+			foreach (string mod in modules_idxs)
+			{
+				foreach (Module mod2 in modules)
+				{
+					if (mod == mod2.Id) users[idx].Modules.Add(mod2);
+				}
+			}
 
 			Console.WriteLine("\npress any key to go back to main menu...");
 			Console.ReadKey(true);
@@ -253,9 +285,10 @@ Welcome to the Student Management System ! What would you like to do ?
 			Console.WriteLine("<< Add Module >>");
 
 			Console.WriteLine("Modules about to enroll (1:EE3301, 2:EE3305, 3:EE330, 4:IS3401). Enter them space separately (eg: 2 3):");
+			string modules_indexes = "";
 			try
 			{
-				string modules_indexes = Console.ReadLine();
+				modules_indexes = Console.ReadLine();
 			}
 			catch (Exception ex)
 			{
@@ -273,6 +306,15 @@ Welcome to the Student Management System ! What would you like to do ?
 			update 'users' array
 			
 			*/
+			string[] modules_idxs = modules_indexes.Split(null);
+
+			foreach (string mod in modules_idxs)
+			{
+				foreach (Module mod2 in modules)
+				{
+					if (mod == mod2.Id) users[idx].Modules.Add(mod2);
+				}
+			}
 
 			Console.WriteLine("\npress any key to go back to main menu...");
 			Console.ReadKey(true);
@@ -289,10 +331,14 @@ Welcome to the Student Management System ! What would you like to do ?
 
 ";
 			// user 'Module' objects array of particular user
-			List<string> options = new List<string> { "Module 2", "Module 4" };
+			List<Module> userModules = users[idx].Modules;
+			List<string> options = new List<string> { };
+			foreach (Module mod in userModules) { options.Add(mod.Name); }
+			options.Add("Back to Main Menu");
 			Menu menu = new Menu(prompt, options);
 			int selectedIndex = menu.Run();
-
+			if (selectedIndex == options.Count - 1) RunMainMenu();
+			else users[idx].Modules.RemoveAt(selectedIndex);
 			/*
 			 remove selecedIndex's module of given users , from his module array
 			 */
@@ -308,6 +354,7 @@ Welcome to the Student Management System ! What would you like to do ?
 			update 'users'
 			
 			*/
+			users.RemoveAt(idx);
 			RunMainMenu();
 
 		}

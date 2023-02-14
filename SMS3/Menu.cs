@@ -42,6 +42,7 @@ namespace SMS3
 				Console.WriteLine($"{prefix} << {currentOption} >>");
 			}
 			Console.ResetColor();
+			Console.WriteLine("\nWatch my progress of project with source code :) https://github.com/PasanAbeysekara/StudentManagementSystem");
 		}
 
 		public int Run()
