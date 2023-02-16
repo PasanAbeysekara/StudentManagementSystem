@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Versioning;
@@ -68,8 +69,9 @@ Welcome to the Student Management System ! What would you like to do ?
 		{
 			Console.Clear();
 			Console.WriteLine("<< Add User >>");
-			Console.WriteLine("First Name: ");
-			string fname="", lname="", dob = "", address = "", modules_indexes = "";
+			Console.WriteLine("\n> First Name: ");
+			string fname="", lname="", dob = "", address = "";
+			List<string> modules_idxs = new List<string> { };
 			try
 			{
 				fname = Console.ReadLine();
@@ -78,7 +80,7 @@ Welcome to the Student Management System ! What would you like to do ?
 			{
 				Console.WriteLine("Invalid value entered !");
 			}
-			Console.WriteLine("Last Name: ");
+			Console.WriteLine("\n> Last Name: ");
 			try
 			{
 				lname = Console.ReadLine();
@@ -87,7 +89,7 @@ Welcome to the Student Management System ! What would you like to do ?
 			{
 				Console.WriteLine("Invalid value entered !");
 			}
-			Console.WriteLine("Date of Birth: ");
+			Console.WriteLine("\n> Date of Birth: ");
 			try
 			{
 				dob = Console.ReadLine();
@@ -96,7 +98,7 @@ Welcome to the Student Management System ! What would you like to do ?
 			{
 				Console.WriteLine("Invalid value entered !");
 			}
-			Console.WriteLine("Address:");
+			Console.WriteLine("\n> Address:");
 			try
 			{
 				address = Console.ReadLine();
@@ -105,6 +107,8 @@ Welcome to the Student Management System ! What would you like to do ?
 			{
 				Console.WriteLine("Invalid value entered !");
 			}
+
+			/*
 			Console.WriteLine("Modules enrolled (1:EE3301, 2:CE3201, 3:ME3305, 4:IS3201) . Enter them space separately (eg: 2 3):");
 			try
 			{
@@ -113,7 +117,16 @@ Welcome to the Student Management System ! What would you like to do ?
 			catch (Exception ex)
 			{
 				Console.WriteLine("Invalid value entered !");
-			}
+			}*/
+			string propmpt = "Available Modules :";
+			List<string> options = new List<string> {};
+			foreach(Module mod in modules) options.Add(mod.Name);
+			options.Add(" Finish Selections :-) ");
+			Menu menu = new Menu(propmpt, options);
+			var cursorPos = Console.GetCursorPosition();
+			List<int> selectedIndexes = menu.RunWithoutClearConsole(cursorPos);
+			foreach(int index in selectedIndexes) modules_idxs.Add(index.ToString());
+			
 
 			/*
 			
@@ -128,8 +141,6 @@ Welcome to the Student Management System ! What would you like to do ?
 			 */
 			User user = new User(fname,lname,dob,address);
 			
-			string[] modules_idxs = modules_indexes.Split(null);
-			
 			foreach(string mod in modules_idxs)
 			{
 				foreach(Module mod2 in modules)
@@ -138,7 +149,8 @@ Welcome to the Student Management System ! What would you like to do ?
 				}
 			}
 
-			users.Add(user);
+			// to make first name mandatory
+			if(fname!="") users.Add(user);
 
 			Console.WriteLine("\npress any key to go back to main menu...");
 			Console.ReadKey(true);
@@ -148,11 +160,7 @@ Welcome to the Student Management System ! What would you like to do ?
 		// Main Menu
 		private void SelectUser()
 		{
-			string prompt = @"
-
-<< Select User >>
-
-";
+			string prompt = "<< Select User >>\n";
 			// user 'Users' objects array
 			List<string> options = new List<string> { };
 			foreach (User user_ in users)
@@ -169,11 +177,7 @@ Welcome to the Student Management System ! What would you like to do ?
 		
 		private void UserN(int idx)
 		{
-			string prompt = @"
-
-<< User >>
-
-";
+			string prompt = "<< User >>\n";
 			List<string> options = new List<string> { "Modify User","Add Modules","Remove Modules","Delete User","Back" };
 			Menu menu = new Menu(prompt,options);
 			int selectedIndex = menu.Run();
@@ -201,9 +205,10 @@ Welcome to the Student Management System ! What would you like to do ?
 		private void UserNModifyUser(int idx)
 		{
 			Console.Clear();
-			Console.WriteLine("<< Modify User >>");
-			Console.WriteLine("First Name\t: ");
-			string fname = "", lname = "", dob = "", address = "", modules_indexes = "";
+			Console.WriteLine("<< Modify User >>\n(press Enter if you don't want to change)\n");
+			Console.WriteLine($"> First Name ({users[idx].FirstName})\t: ");
+			string fname = "", lname = "", dob = "", address = "";
+			List<string> modules_idxs = new List<string> { };
 			try
 			{
 				fname = Console.ReadLine();
@@ -212,7 +217,7 @@ Welcome to the Student Management System ! What would you like to do ?
 			{
 				Console.WriteLine("Invalid value entered !");
 			}
-			Console.WriteLine("Last Name\t: ");
+			Console.WriteLine($"> Last Name ({users[idx].LastName})\t: ");
 			try
 			{
 				lname = Console.ReadLine();
@@ -221,7 +226,7 @@ Welcome to the Student Management System ! What would you like to do ?
 			{
 				Console.WriteLine("Invalid value entered !");
 			}
-			Console.WriteLine("Date of Birth\t: ");
+			Console.WriteLine($"> Date of Birth ({users[idx].DateOfBirth})\t: ");
 			try
 			{
 				dob = Console.ReadLine();
@@ -230,7 +235,7 @@ Welcome to the Student Management System ! What would you like to do ?
 			{
 				Console.WriteLine("Invalid value entered !");
 			}
-			Console.WriteLine("Address\t:");
+			Console.WriteLine($"> Address ({users[idx].Address})\t:");
 			try
 			{
 				address = Console.ReadLine();
@@ -239,7 +244,8 @@ Welcome to the Student Management System ! What would you like to do ?
 			{
 				Console.WriteLine("Invalid value entered !");
 			}
-			Console.WriteLine("Modules enrolled (1:EE3301, 2:CE3201, 3:ME3305, 4:IS3201) . Enter them space separately (eg: 2 3):");
+			/*
+			Console.WriteLine("> Modules enrolled (1:EE3301, 2:CE3201, 3:ME3305, 4:IS3201) . Enter them space separately (eg: 2 3):");
 			try
 			{
 				modules_indexes = Console.ReadLine();
@@ -248,6 +254,24 @@ Welcome to the Student Management System ! What would you like to do ?
 			{
 				Console.WriteLine("Invalid value entered !");
 			}
+			*/
+
+			string propmpt = "Available Modules :";
+
+			Console.Write("(....You already enrolled to -> ");
+			if (users[idx].Modules.Count == 0) Console.WriteLine("Nothing :-|");
+			foreach (Module mod in users[idx].Modules) Console.Write(mod.Name + " ");
+			Console.WriteLine("....\n");
+
+
+			List<string> options = new List<string> { };
+			foreach (Module mod in modules) if (!users[idx].Modules.Contains(mod)) options.Add(mod.Name);
+			options.Add(" Finish Selections :-) ");
+			Menu menu = new Menu(propmpt, options);
+			var cursorPos = Console.GetCursorPosition();
+			List<int> selectedIndexes = menu.RunWithoutClearConsole(cursorPos);
+			foreach (int index in selectedIndexes) modules_idxs.Add(index.ToString());
+
 			/*
 			
 			Acess user by idx -->  User user = Users[idx];
@@ -258,22 +282,26 @@ Welcome to the Student Management System ! What would you like to do ?
 			
 			*/
 
-			users[idx].FirstName = fname;
-			users[idx].LastName = lname;
-			users[idx].DateOfBirth = dob;
-			users[idx].Address = address;
+			if(fname!="") users[idx].FirstName = fname;
+			if (lname != "") users[idx].LastName = lname;
+			if (dob != "") users[idx].DateOfBirth = dob;
+			if (address != "") users[idx].Address = address;
 
-			string[] modules_idxs = modules_indexes.Split(null);
-
-			users[idx].Modules = new List<Module> { };
-			foreach (string mod in modules_idxs)
+			List<Module> remainModules = new List<Module> { };
+			foreach (Module mod in modules) if (!users[idx].Modules.Contains(mod)) remainModules.Add(mod);
+			for(int i = 0; i < remainModules.Count; i++)
 			{
-				foreach (Module mod2 in modules)
-				{
-					if (mod == mod2.Id) users[idx].Modules.Add(mod2);
-				}
+				remainModules[i].Id = (i + 1).ToString();
 			}
 
+			foreach (string mod in modules_idxs)
+			{
+				foreach (Module mod2 in remainModules)
+				{
+					if ((mod == mod2.Id) && (!users[idx].Modules.Contains(mod2))) users[idx].Modules.Add(mod2);
+				}
+			}
+			
 			Console.WriteLine("\npress any key to go back to main menu...");
 			Console.ReadKey(true);
 			RunMainMenu();
@@ -284,7 +312,8 @@ Welcome to the Student Management System ! What would you like to do ?
 			Console.Clear();
 			Console.WriteLine("<< Add Module >>");
 
-			Console.WriteLine("Modules about to enroll (1:EE3301, 2:EE3305, 3:EE330, 4:IS3401). Enter them space separately (eg: 2 3):");
+			/*
+			Console.WriteLine("\nModules about to enroll (1:EE3301, 2:EE3305, 3:EE330, 4:IS3401). Enter them space separately (eg: 2 3):");
 			string modules_indexes = "";
 			try
 			{
@@ -294,8 +323,26 @@ Welcome to the Student Management System ! What would you like to do ?
 			{
 				Console.WriteLine("Invalid value entered !");
 			}
+			*/
+
+			string propmpt = "\nAvailable Modules :";
+
+			Console.Write("(....You already enrolled to -> ");
+			if (users[idx].Modules.Count == 0) Console.WriteLine("Nothing :-|");
+			foreach (Module mod in users[idx].Modules) Console.Write(mod.Name + " ");
+			Console.WriteLine("....)\n");
+
+			List<string> modules_idxs = new List<string> { };
+			List<string> options = new List<string> { };
+			foreach (Module mod in modules) if (!users[idx].Modules.Contains(mod)) options.Add(mod.Name);
+			options.Add(" Finish Selections :-) ");
+			Menu menu = new Menu(propmpt, options);
+			var cursorPos = Console.GetCursorPosition();
+			List<int> selectedIndexes = menu.RunWithoutClearConsole(cursorPos);
+			foreach (int index in selectedIndexes) modules_idxs.Add(index.ToString());
+
+
 			/*
-			
 			
 			Acess 'user' by idx -->  User user = Users[idx];
 			
@@ -306,15 +353,21 @@ Welcome to the Student Management System ! What would you like to do ?
 			update 'users' array
 			
 			*/
-			string[] modules_idxs = modules_indexes.Split(null);
+			List<Module> remainModules = new List<Module> { };
+			foreach (Module mod in modules) if (!users[idx].Modules.Contains(mod)) remainModules.Add(mod);
+			for (int i = 0; i < remainModules.Count; i++)
+			{
+				remainModules[i].Id = (i + 1).ToString();
+			}
 
 			foreach (string mod in modules_idxs)
 			{
-				foreach (Module mod2 in modules)
+				foreach (Module mod2 in remainModules)
 				{
-					if (mod == mod2.Id) users[idx].Modules.Add(mod2);
+					if ((mod == mod2.Id) && (!users[idx].Modules.Contains(mod2))) users[idx].Modules.Add(mod2);
 				}
 			}
+
 
 			Console.WriteLine("\npress any key to go back to main menu...");
 			Console.ReadKey(true);
@@ -325,11 +378,7 @@ Welcome to the Student Management System ! What would you like to do ?
 		// UserN Menu
 		private void UserNRemoveModules(int idx)
 		{
-			string prompt = @"
-
-<< Remove Module >>
-
-";
+			string prompt = "<< Remove Modules >>\n";
 			// user 'Module' objects array of particular user
 			List<Module> userModules = users[idx].Modules;
 			List<string> options = new List<string> { };
@@ -354,7 +403,13 @@ Welcome to the Student Management System ! What would you like to do ?
 			update 'users'
 			
 			*/
-			users.RemoveAt(idx);
+
+			Console.WriteLine("\nAre you sure ? do you want to delete this user ? (press 'y' if yes / press any other to go back main menu)");
+
+			ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+			ConsoleKey keyPressed = keyInfo.Key;
+
+			if (keyPressed == ConsoleKey.Y) users.RemoveAt(idx);	
 			RunMainMenu();
 
 		}
@@ -365,15 +420,10 @@ Welcome to the Student Management System ! What would you like to do ?
 		}
 
 
-
 		// Main Menu
 		private void DeleteUser()
 		{
-			string prompt = @"
-
-<< Delete User >>
-
-";
+			string prompt = "<< Delete User >>\n";
 			// user 'Users' objects array
 			List<string> options = new List<string> { };
 			foreach (User user_ in users)
@@ -392,9 +442,17 @@ Welcome to the Student Management System ! What would you like to do ?
 			remove 'user' from 'users' array
 
 			 */
-			if (selectedIndex != options.Count-1)
-			{
-				users.RemoveAt(selectedIndex);
+			
+			Console.WriteLine("\nAre you sure ? do you want to delete this user ? (press 'y' if yes / press any other to go back main menu)");
+
+			ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+			ConsoleKey keyPressed = keyInfo.Key;
+			
+			if(keyPressed == ConsoleKey.Y ) {
+				if (selectedIndex != options.Count - 1)
+				{
+					users.RemoveAt(selectedIndex);
+				}
 			}
 			RunMainMenu();
 		}
@@ -428,7 +486,7 @@ Welcome to the Student Management System ! What would you like to do ?
 					modules_str += " ";
 				}
 
-				Console.WriteLine($"{user.FirstName}\t{user.LastName}\t{user.DateOfBirth}\t{user.Address}\t{modules_str}");
+				Console.WriteLine($"{user.FirstName}\t{user.LastName}\t\t{user.DateOfBirth}\t{user.Address}\t{modules_str}");
 			}
 
 
