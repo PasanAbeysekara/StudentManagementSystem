@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Options;
+﻿using CSharpBasics.TabularData;
+using Microsoft.Extensions.Options;
+using SMS3.ForPrintTable;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -614,6 +616,7 @@ Note : If you didn't mention your grade, it will account as 'F' !
 		{
 			Console.Clear();
 
+			Console.WriteLine("<< Delete User >>\n");
 			/*
 			
 				
@@ -628,18 +631,38 @@ Note : If you didn't mention your grade, it will account as 'F' !
 
 			 */
 
-			Console.WriteLine("FirstName\tLastName\tDateOfBirth\tAddress\t\t\tModules\t\t\tGPA");
-			foreach (User user in users)
+
+			IPrintTabularData<TempUser> userDataPrinter = new TablePrinter<TempUser>();
+
+			// for purpose of drawing the table
+			List<TempUser> tempUsers = new List<TempUser>();
+			
+			foreach(User u in users)
 			{
-				string modules_str = "";
-				foreach(Module mod in user.Modules)
-				{
-					modules_str += mod.Name;
-					modules_str += " ";
-				}
-				double GPA=CalcGPA(user);
-				Console.WriteLine($"{user.FirstName}\t\t{user.LastName}\t\t{user.DateOfBirth}\t{user.Address}\t\t{modules_str}\t{GPA}");
+				TempUser tu = new TempUser();
+				tu.FirstName = u.FirstName;
+				tu.LastName = u.LastName;
+				tu.DateOfBirth = u.DateOfBirth;
+				tu.GPA = Math.Round(CalcGPA(u),3).ToString();
+				tempUsers.Add(tu);
 			}
+
+			userDataPrinter.PrintTable(tempUsers);
+
+
+
+			//Console.WriteLine("FirstName\tLastName\tDateOfBirth\tAddress\t\t\tModules\t\t\tGPA");
+			//foreach (User user in users)
+			//{
+			//	string modules_str = "";
+			//	foreach(Module mod in user.Modules)
+			//	{
+			//		modules_str += mod.Name;
+			//		modules_str += " ";
+			//	}
+			//	double GPA=CalcGPA(user);
+			//	Console.WriteLine($"{user.FirstName}\t\t{user.LastName}\t\t{user.DateOfBirth}\t{user.Address}\t\t{modules_str}\t{GPA}");
+			//}
 
 
 

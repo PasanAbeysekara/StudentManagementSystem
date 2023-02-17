@@ -13,6 +13,7 @@ namespace SMS3
 			Id = id;
 			Name = name;
 			CreditValue = creditValue;
+			GradePoint = "";
 		}
 
 		public string Id { get; set; }
