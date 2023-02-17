@@ -16,14 +16,48 @@ namespace SMS3
 		public List<User> users { get; set; }
 		public List<Module> modules { get; set; }
 
+		// for providing unique ID for each student
+		public int studentId { get; set; }
+
 		public App()
 		{
+			studentId= 0;
+
+			// creating modules 
 			Module m1 = new Module("1","EE3301","3");
 			Module m2 = new Module("2", "CE3201", "2");
 			Module m3 = new Module("3", "ME3305", "3");
 			Module m4 = new Module("4", "IS3201", "2");
-			users = new List<User> { };
 			modules = new List<Module> { m1, m2, m3, m4};
+
+			// Creating dummy students data
+			User s1 = new User("Rajitha", "Perera", "23/12/1990", "No 12, Cage road, Galle");
+			s1.Id = studentId++;
+			s1.Modules = new List<Module> { m1,m2};
+			s1.Modules[0].GradePoint = "A";
+			s1.Modules[1].GradePoint = "B";
+
+			User s2 = new User("Saman", "Kumara", "21/02/1992", "No 5, Temple road, Maharagama");
+			s2.Id = studentId++;
+			s2.Modules = new List<Module> { m2, m4 };
+			s2.Modules[0].GradePoint = "A-";
+			s2.Modules[1].GradePoint = "B+";
+
+
+			User s3 = new User("Nimal", "Sisira", "31/01/2002", "No 69, Church road, Piliyanadala");
+			s3.Id = studentId++;
+			s3.Modules = new List<Module> { m1,m2,m3 };
+			s3.Modules[0].GradePoint = "B-";
+			s3.Modules[1].GradePoint = "A-";
+			s3.Modules[2].GradePoint = "A+";
+
+			User s4 = new User("Anil", "Kasturi", "02/12/1995", "No 8, Miris road, Negombo");
+			s4.Id = studentId++;
+			s4.Modules = new List<Module> { m3, m4 };
+			s4.Modules[0].GradePoint = "B";
+			s4.Modules[1].GradePoint = "A";
+
+			users = new List<User> { s1,s2,s3,s4 };
 		}
 
 		public void Start()
@@ -171,6 +205,7 @@ Welcome to the Student Management System !
 			// check wheter 'dob' in DD/MM/YYYY format
 			if (dob.Length != 10) dob = "Not Valid";
 			User user = new User(fname,lname,dob,address);
+			user.Id = studentId++;
 			
 			foreach(string mod in modules_idxs)
 			{
@@ -674,15 +709,15 @@ Note : If you didn't mention your grade, it will account as 'F' !
 
 			 */
 
-			if (users.Count > 0)
+			if(selectedIndex == (options.Count-1) || users.Count==0) Console.WriteLine("press any other to go back main menu ...");
+			else
 			{
 
 				Console.ForegroundColor = ConsoleColor.Red;
 				Console.WriteLine("\nAre you sure ? do you want to delete this user ? (press 'y' if yes / press any other to go back main menu)");
 				Console.ResetColor();
 			}
-			else Console.WriteLine("press any other to go back main menu ...");
-
+			
 			ConsoleKeyInfo keyInfo = Console.ReadKey(true);
 			ConsoleKey keyPressed = keyInfo.Key;
 			
@@ -727,6 +762,7 @@ Note : If you didn't mention your grade, it will account as 'F' !
 			foreach(User u in users)
 			{
 				TempUser tu = new TempUser();
+				tu.Id= u.Id;
 				tu.FirstName = u.FirstName;
 				tu.LastName = u.LastName;
 				tu.DateOfBirth = u.DateOfBirth;

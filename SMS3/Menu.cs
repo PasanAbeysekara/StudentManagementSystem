@@ -50,7 +50,7 @@ namespace SMS3
 			Console.ResetColor();
 
 			Console.ForegroundColor = ConsoleColor.DarkGray;
-			Console.WriteLine("\nWatch my progress of project with source code :) https://github.com/PasanAbeysekara/StudentManagementSystem");
+			Console.WriteLine("\nTrack my project's journey through its source code! :) https://github.com/PasanAbeysekara/StudentManagementSystem");
 			Console.ResetColor();
 		}
 
