@@ -737,7 +737,7 @@ Note : If you didn't mention your grade, it will account as 'F' !
 
 
 			Console.ForegroundColor = ConsoleColor.Yellow;
-			Console.WriteLine("<< Delete User >>\n");
+			Console.WriteLine("<< All Users >>\n");
 			Console.ResetColor();
 			/*
 			
