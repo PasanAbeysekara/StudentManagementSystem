@@ -1,6 +1,7 @@
 ﻿using CSharpBasics.TabularData;
 using Microsoft.Extensions.Options;
 using SMS3.ForPrintTable;
+using SMS3.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SMS3
 {
-	public class App
+    public class App
 	{
 		public List<User> users { get; set; }
 		public List<Module> modules { get; set; }
@@ -40,10 +41,12 @@ namespace SMS3
 (_ |_    _| _ _ |_  |\/| _  _  _  _  _ _  _ _ |_  (_    _|_ _ _  
 __)|_|_|(_|(-| )|_  |  |(_|| )(_|(_)(-|||(-| )|_  __)\/_)|_(-||| 
                                  _/                  /           
-Welcome to the Student Management System ! What would you like to do ?
-(Use the arrow keys to cycle through options and press enter to select an option.)
-";
+Welcome to the Student Management System !
 
+(Use the arrow keys to cycle through options and press enter to select an option.)
+
+";
+			
 			List<string> options = new List<string> { "Add User", "Select User", "Delete User","Display All Users","Quit" };
 			Menu menu = new Menu(prompt, options);
 			int selectedIndex = menu.Run();
@@ -72,41 +75,59 @@ Welcome to the Student Management System ! What would you like to do ?
 		private void AddUser()
 		{
 			Console.Clear();
+			Console.ForegroundColor = ConsoleColor.Yellow;
 			Console.WriteLine("<< Add User >>");
+			Console.ResetColor();
 			Console.CursorVisible = true;
+			Console.ForegroundColor = ConsoleColor.DarkCyan;
 			Console.WriteLine("\n> First Name: ");
+			Console.ResetColor();
 			string fname="", lname="", dob = "", address = "";
 			List<string> modules_idxs = new List<string> { };
 			try
 			{
+				Console.ForegroundColor = ConsoleColor.Green;
 				fname = Console.ReadLine();
+				Console.ResetColor();
 			}
 			catch(Exception ex)
 			{
 				Console.WriteLine("Invalid value entered !");
 			}
+			Console.ForegroundColor = ConsoleColor.DarkCyan;
 			Console.WriteLine("\n> Last Name: ");
+			Console.ResetColor();
 			try
 			{
+				Console.ForegroundColor = ConsoleColor.Green;
 				lname = Console.ReadLine();
+				Console.ResetColor();
 			}
 			catch (Exception ex)
 			{
 				Console.WriteLine("Invalid value entered !");
 			}
+			Console.ForegroundColor = ConsoleColor.DarkCyan;
 			Console.WriteLine("\n> Date of Birth (should be DD/MM/YYYY format): ");
+			Console.ResetColor();
 			try
 			{
+				Console.ForegroundColor = ConsoleColor.Green;
 				dob = Console.ReadLine();
+				Console.ResetColor();
 			}
 			catch (Exception ex)
 			{
 				Console.WriteLine("Invalid value entered !");
 			}
+			Console.ForegroundColor = ConsoleColor.DarkCyan;
 			Console.WriteLine("\n> Address:");
+			Console.ResetColor();
 			try
 			{
+				Console.ForegroundColor = ConsoleColor.Green;
 				address = Console.ReadLine();
+				Console.ResetColor();
 			}
 			catch (Exception ex)
 			{
@@ -124,6 +145,7 @@ Welcome to the Student Management System ! What would you like to do ?
 				Console.WriteLine("Invalid value entered !");
 			}*/
 			Console.CursorVisible = false;
+			
 			string propmpt = "\n> Available Modules :";
 			List<string> options = new List<string> {};
 			foreach(Module mod in modules) options.Add(mod.Name);
@@ -179,14 +201,26 @@ Welcome to the Student Management System ! What would you like to do ?
 Choose your grade (eg:- A-)
 Note : If you didn't mention your grade, it will account as 'F' !
 ";
+
+				Console.ForegroundColor = ConsoleColor.DarkCyan;
 				Console.WriteLine("\n> Enter your grades for each module : " + gradePointValuesInstructions);
+				Console.ResetColor();
+
 				Console.CursorVisible = true;
 				string grade = "";
+				string[] grades_ = { "A" ,"A-","B+","B","B-","C+","C","C-","F"};
+
 				foreach (Module mod in user.Modules)
 				{
+
+					Console.ForegroundColor = ConsoleColor.DarkCyan;
 					Console.WriteLine("> " + mod.Name + " : ");
+
+					Console.ForegroundColor = ConsoleColor.Green;
 					grade = Console.ReadLine().ToUpper();
-					if (grade.Length > 0) mod.GradePoint = grade;
+					Console.ResetColor();
+
+					if (grades_.Contains(grade)) mod.GradePoint = grade;
 					else mod.GradePoint = "F";
 				}
 			}
@@ -254,8 +288,16 @@ Note : If you didn't mention your grade, it will account as 'F' !
 		private void UserNModifyUser(int idx)
 		{
 			Console.Clear();
+
+			Console.ForegroundColor = ConsoleColor.Yellow;
 			Console.WriteLine("<< Modify User >>\n(press Enter if you don't want to change)\n");
-			Console.WriteLine($"> First Name ({users[idx].FirstName})\t: ");
+			Console.ResetColor();
+
+
+			Console.ForegroundColor = ConsoleColor.DarkCyan;
+			Console.WriteLine($"\n> First Name ({users[idx].FirstName})\t: ");
+			Console.ResetColor();
+
 			string fname = "", lname = "", dob = "", address = "";
 			List<string> modules_idxs = new List<string> { };
 			try
@@ -266,7 +308,9 @@ Note : If you didn't mention your grade, it will account as 'F' !
 			{
 				Console.WriteLine("Invalid value entered !");
 			}
-			Console.WriteLine($"> Last Name ({users[idx].LastName})\t: ");
+			Console.ForegroundColor = ConsoleColor.DarkCyan;
+			Console.WriteLine($"\n> Last Name ({users[idx].LastName})\t: ");
+			Console.ResetColor();
 			try
 			{
 				lname = Console.ReadLine();
@@ -275,7 +319,9 @@ Note : If you didn't mention your grade, it will account as 'F' !
 			{
 				Console.WriteLine("Invalid value entered !");
 			}
-			Console.WriteLine($"> Date of Birth ({users[idx].DateOfBirth})\t: ");
+			Console.ForegroundColor = ConsoleColor.DarkCyan;
+			Console.WriteLine($"\n> Date of Birth ({users[idx].DateOfBirth})\t: ");
+			Console.ResetColor();
 			try
 			{
 				dob = Console.ReadLine();
@@ -284,7 +330,9 @@ Note : If you didn't mention your grade, it will account as 'F' !
 			{
 				Console.WriteLine("Invalid value entered !");
 			}
-			Console.WriteLine($"> Address ({users[idx].Address})\t:");
+			Console.ForegroundColor = ConsoleColor.DarkCyan;
+			Console.WriteLine($"\n> Address ({users[idx].Address})\t:");
+			Console.ResetColor();
 			try
 			{
 				address = Console.ReadLine();
@@ -307,10 +355,12 @@ Note : If you didn't mention your grade, it will account as 'F' !
 
 			string propmpt = "Available Modules :";
 
-			Console.Write("(....You already enrolled to -> ");
+			Console.ForegroundColor = ConsoleColor.DarkCyan;
+			Console.Write("\n(....You already enrolled to -> ");
 			if (users[idx].Modules.Count == 0) Console.WriteLine("Nothing :-|");
 			foreach (Module mod in users[idx].Modules) Console.Write(mod.Name + " ");
-			Console.WriteLine("....\n");
+			Console.WriteLine("....)\n");
+			Console.ResetColor();
 
 
 			List<string> options = new List<string> { };
@@ -380,16 +430,25 @@ Note : If you didn't mention your grade, it will account as 'F' !
 Choose your grade (eg:- A-)
 Note : If you didn't mention your grade, it will account as 'F' !
 ";
+
+				Console.ForegroundColor = ConsoleColor.DarkCyan;
 				Console.WriteLine("\n> Enter your grades for each module : " + gradePointValuesInstructions);
+				Console.ResetColor();
+
 				Console.CursorVisible = true;
 				string grade = "";
+				string[] grades_ = { "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "F" };
+				
 				foreach (Module mod in users[idx].Modules)
 				{
 					if (mod.GradePoint.Length == 0)
 					{
+						Console.ForegroundColor = ConsoleColor.Green;
 						Console.WriteLine("> " + mod.Name + " : ");
+						Console.ResetColor();
+
 						grade = Console.ReadLine().ToUpper();
-						if (grade.Length > 0) mod.GradePoint = grade;
+						if (!grades_.Contains(grade)) mod.GradePoint = grade;
 						else mod.GradePoint = "F";
 					}
 				}
@@ -406,7 +465,10 @@ Note : If you didn't mention your grade, it will account as 'F' !
 		private void UserNAddModules(int idx)
 		{
 			Console.Clear();
+
+			Console.ForegroundColor = ConsoleColor.Yellow;
 			Console.WriteLine("<< Add Module >>");
+			Console.ResetColor();
 
 			/*
 			Console.WriteLine("\nModules about to enroll (1:EE3301, 2:EE3305, 3:EE330, 4:IS3401). Enter them space separately (eg: 2 3):");
@@ -421,9 +483,9 @@ Note : If you didn't mention your grade, it will account as 'F' !
 			}
 			*/
 
-			string propmpt = "\nAvailable Modules :";
+			string propmpt = "Available Modules :";
 
-			Console.Write("(....You already enrolled to -> ");
+			Console.Write("\n(....You already enrolled to -> ");
 			if (users[idx].Modules.Count == 0) Console.WriteLine("Nothing :-|");
 			foreach (Module mod in users[idx].Modules) Console.Write(mod.Name + " ");
 			Console.WriteLine("....)\n");
@@ -491,16 +553,26 @@ Note : If you didn't mention your grade, it will account as 'F' !
 Choose your grade (eg:- A-)
 Note : If you didn't mention your grade, it will account as 'F' !
 ";
+
+				Console.ForegroundColor = ConsoleColor.DarkCyan;
 				Console.WriteLine("\n> Enter your grades for each module : " + gradePointValuesInstructions);
+				Console.ResetColor();
+
 				Console.CursorVisible = true;
 				string grade = "";
+				string[] grades_ = { "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "F" };
+				
 				foreach (Module mod in users[idx].Modules)
 				{
 					if (mod.GradePoint.Length == 0)
 					{
+
+						Console.ForegroundColor = ConsoleColor.Green;
 						Console.WriteLine("> " + mod.Name + " : ");
+						Console.ResetColor();
+
 						grade = Console.ReadLine().ToUpper();
-						if (grade.Length > 0) mod.GradePoint = grade;
+						if (grades_.Contains(grade)) mod.GradePoint = grade;
 						else mod.GradePoint = "F";
 					}
 				}
@@ -527,7 +599,9 @@ Note : If you didn't mention your grade, it will account as 'F' !
 			Menu menu = new Menu(prompt, options);
 			int selectedIndex = menu.Run();
 
+			Console.ForegroundColor = ConsoleColor.Red;
 			Console.WriteLine("\nAre you sure ? do you want to delete this user ? (press 'y' if yes / press any other to go back main menu)");
+			Console.ResetColor();
 
 			ConsoleKeyInfo keyInfo = Console.ReadKey(true);
 			ConsoleKey keyPressed = keyInfo.Key;
@@ -555,7 +629,10 @@ Note : If you didn't mention your grade, it will account as 'F' !
 			
 			*/
 
+
+			Console.ForegroundColor = ConsoleColor.Red;
 			Console.WriteLine("\nAre you sure ? do you want to delete this user ? (press 'y' if yes / press any other to go back main menu)");
+			Console.ResetColor();
 
 			ConsoleKeyInfo keyInfo = Console.ReadKey(true);
 			ConsoleKey keyPressed = keyInfo.Key;
@@ -596,7 +673,13 @@ Note : If you didn't mention your grade, it will account as 'F' !
 
 			 */
 
-			if (users.Count > 0) Console.WriteLine("\nAre you sure ? do you want to delete this user ? (press 'y' if yes / press any other to go back main menu)");
+			if (users.Count > 0)
+			{
+
+				Console.ForegroundColor = ConsoleColor.Red;
+				Console.WriteLine("\nAre you sure ? do you want to delete this user ? (press 'y' if yes / press any other to go back main menu)");
+				Console.ResetColor();
+			}
 			else Console.WriteLine("press any other to go back main menu ...");
 
 			ConsoleKeyInfo keyInfo = Console.ReadKey(true);
@@ -616,7 +699,10 @@ Note : If you didn't mention your grade, it will account as 'F' !
 		{
 			Console.Clear();
 
+
+			Console.ForegroundColor = ConsoleColor.Yellow;
 			Console.WriteLine("<< Delete User >>\n");
+			Console.ResetColor();
 			/*
 			
 				

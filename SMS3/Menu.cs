@@ -25,7 +25,9 @@ namespace SMS3
 
 		private void DisplayOptions()
 		{
+			Console.ForegroundColor= ConsoleColor.Cyan;
 			Console.WriteLine(Prompt);
+			Console.ResetColor();
 			for (int i = 0; i < Options.Count; i++)
 			{
 				Console.ForegroundColor = ConsoleColor.White;
@@ -34,8 +36,8 @@ namespace SMS3
 
 				if (i == SelectedIndex)
 				{
-					Console.ForegroundColor = ConsoleColor.Black;
-					Console.BackgroundColor = ConsoleColor.White;
+					Console.ForegroundColor = ConsoleColor.Green;
+					// Console.BackgroundColor = ConsoleColor.White;
 					prefix = $"*";
 				}
 				else
@@ -46,8 +48,10 @@ namespace SMS3
 				Console.WriteLine($"{prefix} << {currentOption} >>");
 			}
 			Console.ResetColor();
+
+			Console.ForegroundColor = ConsoleColor.DarkGray;
 			Console.WriteLine("\nWatch my progress of project with source code :) https://github.com/PasanAbeysekara/StudentManagementSystem");
-			
+			Console.ResetColor();
 		}
 
 		public int Run()
@@ -86,7 +90,11 @@ namespace SMS3
 			do
 			{
 				Console.SetCursorPosition(cursorPos.Item1, cursorPos.Item2);
+
+				Console.ForegroundColor = ConsoleColor.DarkCyan;
 				Console.WriteLine(Prompt);
+				Console.ResetColor();
+
 				for (int i = 0; i < Options.Count; i++)
 				{
 					Console.ForegroundColor = ConsoleColor.White;
@@ -95,14 +103,14 @@ namespace SMS3
 
 					if (SelectedIndexes.Contains(i))
 					{
-						Console.ForegroundColor = ConsoleColor.Blue;
-						Console.BackgroundColor = ConsoleColor.White;
+						Console.ForegroundColor = ConsoleColor.Red;
+						// Console.BackgroundColor = ConsoleColor.White;
 						prefix = "$";
 					}
 					else if (i == SelectedIndex)
 					{
-						Console.ForegroundColor = ConsoleColor.Black;
-						Console.BackgroundColor = ConsoleColor.White;
+						Console.ForegroundColor = ConsoleColor.Green;
+						// Console.BackgroundColor = ConsoleColor.White;
 						prefix = $"*";
 					}
 					else
