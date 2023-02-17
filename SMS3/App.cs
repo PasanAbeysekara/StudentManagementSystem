@@ -26,6 +26,8 @@ namespace SMS3
 		public void Start()
 		{
 			Console.Title = "Student Management System";
+			Console.CursorVisible = false;
+			Console.Clear();
 			RunMainMenu();
 		}
 
@@ -69,6 +71,7 @@ Welcome to the Student Management System ! What would you like to do ?
 		{
 			Console.Clear();
 			Console.WriteLine("<< Add User >>");
+			Console.CursorVisible = true;
 			Console.WriteLine("\n> First Name: ");
 			string fname="", lname="", dob = "", address = "";
 			List<string> modules_idxs = new List<string> { };
@@ -89,7 +92,7 @@ Welcome to the Student Management System ! What would you like to do ?
 			{
 				Console.WriteLine("Invalid value entered !");
 			}
-			Console.WriteLine("\n> Date of Birth: ");
+			Console.WriteLine("\n> Date of Birth (should be DD/MM/YYYY format): ");
 			try
 			{
 				dob = Console.ReadLine();
@@ -118,7 +121,8 @@ Welcome to the Student Management System ! What would you like to do ?
 			{
 				Console.WriteLine("Invalid value entered !");
 			}*/
-			string propmpt = "Available Modules :";
+			Console.CursorVisible = false;
+			string propmpt = "\n> Available Modules :";
 			List<string> options = new List<string> {};
 			foreach(Module mod in modules) options.Add(mod.Name);
 			options.Add(" Finish Selections :-) ");
@@ -126,7 +130,7 @@ Welcome to the Student Management System ! What would you like to do ?
 			var cursorPos = Console.GetCursorPosition();
 			List<int> selectedIndexes = menu.RunWithoutClearConsole(cursorPos);
 			foreach(int index in selectedIndexes) modules_idxs.Add(index.ToString());
-			
+
 
 			/*
 			
@@ -139,6 +143,8 @@ Welcome to the Student Management System ! What would you like to do ?
 			update 'users' array
 
 			 */
+			// check wheter 'dob' in DD/MM/YYYY format
+			if (dob.Length != 10) dob = "Not Valid";
 			User user = new User(fname,lname,dob,address);
 			
 			foreach(string mod in modules_idxs)
@@ -149,11 +155,48 @@ Welcome to the Student Management System ! What would you like to do ?
 				}
 			}
 
+			if (user.Modules.Count > 0)
+			{
+
+				string gradePointValuesInstructions = @"
+
+	+---------------------+
+	| Grade Point Values  |
+	+----------+----------+
+	| A = 4.0  | C+ = 2.3 |
+	+----------+----------+
+	| A- = 3.7 | C = 2.0  |
+	+----------+----------+
+	| B+ = 3.3 | C- = 1.7 |
+	+----------+----------+
+	| B = 3.0  | F = 0    |
+	+----------+----------+
+	| B- = 2.7 |          |
+	+----------+----------+
+
+Choose your grade (eg:- A-)
+Note : If you didn't mention your grade, it will account as 'F' !
+";
+				Console.WriteLine("\n> Enter your grades for each module : " + gradePointValuesInstructions);
+				Console.CursorVisible = true;
+				string grade = "";
+				foreach (Module mod in user.Modules)
+				{
+					Console.WriteLine("> " + mod.Name + " : ");
+					grade = Console.ReadLine().ToUpper();
+					if (grade.Length > 0) mod.GradePoint = grade;
+					else mod.GradePoint = "F";
+				}
+			}
+
+
+
 			// to make first name mandatory
-			if(fname!="") users.Add(user);
+			if (fname!="") users.Add(user);
 
 			Console.WriteLine("\npress any key to go back to main menu...");
 			Console.ReadKey(true);
+			Console.Clear();
 			RunMainMenu();
 		}
 		
@@ -171,7 +214,11 @@ Welcome to the Student Management System ! What would you like to do ?
 			//List<string> options = new List<string> {"User 1", "User 2", "User 3"};
 			Menu menu = new Menu(prompt, options);
 			int selectedIndex = menu.Run();
-			if (selectedIndex == options.Count - 1) RunMainMenu();
+			if (selectedIndex == options.Count - 1)
+			{
+				Console.Clear();
+				RunMainMenu();
+			}
 			else UserN(selectedIndex);
 		}
 		
@@ -294,16 +341,63 @@ Welcome to the Student Management System ! What would you like to do ?
 				remainModules[i].Id = (i + 1).ToString();
 			}
 
+			int newlyAddedModules = 0;
 			foreach (string mod in modules_idxs)
 			{
 				foreach (Module mod2 in remainModules)
 				{
-					if ((mod == mod2.Id) && (!users[idx].Modules.Contains(mod2))) users[idx].Modules.Add(mod2);
+					if ((mod == mod2.Id) && (!users[idx].Modules.Contains(mod2)))
+					{
+						newlyAddedModules++;
+						mod2.GradePoint = "";
+						users[idx].Modules.Add(mod2);
+					}
 				}
 			}
-			
+
+
+			if (newlyAddedModules > 0)
+			{
+
+				string gradePointValuesInstructions = @"
+
+	+---------------------+
+	| Grade Point Values  |
+	+----------+----------+
+	| A = 4.0  | C+ = 2.3 |
+	+----------+----------+
+	| A- = 3.7 | C = 2.0  |
+	+----------+----------+
+	| B+ = 3.3 | C- = 1.7 |
+	+----------+----------+
+	| B = 3.0  | F = 0    |
+	+----------+----------+
+	| B- = 2.7 |          |
+	+----------+----------+
+
+Choose your grade (eg:- A-)
+Note : If you didn't mention your grade, it will account as 'F' !
+";
+				Console.WriteLine("\n> Enter your grades for each module : " + gradePointValuesInstructions);
+				Console.CursorVisible = true;
+				string grade = "";
+				foreach (Module mod in users[idx].Modules)
+				{
+					if (mod.GradePoint.Length == 0)
+					{
+						Console.WriteLine("> " + mod.Name + " : ");
+						grade = Console.ReadLine().ToUpper();
+						if (grade.Length > 0) mod.GradePoint = grade;
+						else mod.GradePoint = "F";
+					}
+				}
+
+			}
+
+
 			Console.WriteLine("\npress any key to go back to main menu...");
 			Console.ReadKey(true);
+			Console.Clear();
 			RunMainMenu();
 		}
 		// UserN Menu
@@ -360,17 +454,61 @@ Welcome to the Student Management System ! What would you like to do ?
 				remainModules[i].Id = (i + 1).ToString();
 			}
 
+			int newlyAddedModules = 0;
 			foreach (string mod in modules_idxs)
 			{
 				foreach (Module mod2 in remainModules)
 				{
-					if ((mod == mod2.Id) && (!users[idx].Modules.Contains(mod2))) users[idx].Modules.Add(mod2);
+					if ((mod == mod2.Id) && (!users[idx].Modules.Contains(mod2)))
+					{
+						newlyAddedModules++;
+						mod2.GradePoint = "";
+						users[idx].Modules.Add(mod2);
+					}
+				}
+			}
+
+			if (newlyAddedModules>0)
+			{
+				string gradePointValuesInstructions = @"
+
+	+---------------------+
+	| Grade Point Values  |
+	+----------+----------+
+	| A = 4.0  | C+ = 2.3 |
+	+----------+----------+
+	| A- = 3.7 | C = 2.0  |
+	+----------+----------+
+	| B+ = 3.3 | C- = 1.7 |
+	+----------+----------+
+	| B = 3.0  | F = 0    |
+	+----------+----------+
+	| B- = 2.7 |          |
+	+----------+----------+
+
+Choose your grade (eg:- A-)
+Note : If you didn't mention your grade, it will account as 'F' !
+";
+				Console.WriteLine("\n> Enter your grades for each module : " + gradePointValuesInstructions);
+				Console.CursorVisible = true;
+				string grade = "";
+				foreach (Module mod in users[idx].Modules)
+				{
+					if (mod.GradePoint.Length == 0)
+					{
+						Console.WriteLine("> " + mod.Name + " : ");
+						grade = Console.ReadLine().ToUpper();
+						if (grade.Length > 0) mod.GradePoint = grade;
+						else mod.GradePoint = "F";
+					}
 				}
 			}
 
 
+
 			Console.WriteLine("\npress any key to go back to main menu...");
 			Console.ReadKey(true);
+			Console.Clear();
 			RunMainMenu();
 
 
@@ -386,11 +524,22 @@ Welcome to the Student Management System ! What would you like to do ?
 			options.Add("Back to Main Menu");
 			Menu menu = new Menu(prompt, options);
 			int selectedIndex = menu.Run();
-			if (selectedIndex == options.Count - 1) RunMainMenu();
-			else users[idx].Modules.RemoveAt(selectedIndex);
+
+			Console.WriteLine("\nAre you sure ? do you want to delete this user ? (press 'y' if yes / press any other to go back main menu)");
+
+			ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+			ConsoleKey keyPressed = keyInfo.Key;
+
+
+			if (keyPressed == ConsoleKey.Y)
+			{
+				if (selectedIndex != options.Count - 1) users[idx].Modules.RemoveAt(selectedIndex); ;
+			}
+
 			/*
 			 remove selecedIndex's module of given users , from his module array
 			 */
+			Console.Clear();
 			RunMainMenu();
 
 		}
@@ -409,13 +558,15 @@ Welcome to the Student Management System ! What would you like to do ?
 			ConsoleKeyInfo keyInfo = Console.ReadKey(true);
 			ConsoleKey keyPressed = keyInfo.Key;
 
-			if (keyPressed == ConsoleKey.Y) users.RemoveAt(idx);	
+			if (keyPressed == ConsoleKey.Y) users.RemoveAt(idx);
+			Console.Clear();
 			RunMainMenu();
 
 		}
 		// UserN Menu
 		private void UserNBack()
 		{
+			Console.Clear();
 			RunMainMenu();
 		}
 
@@ -442,8 +593,9 @@ Welcome to the Student Management System ! What would you like to do ?
 			remove 'user' from 'users' array
 
 			 */
-			
-			Console.WriteLine("\nAre you sure ? do you want to delete this user ? (press 'y' if yes / press any other to go back main menu)");
+
+			if (users.Count > 0) Console.WriteLine("\nAre you sure ? do you want to delete this user ? (press 'y' if yes / press any other to go back main menu)");
+			else Console.WriteLine("press any other to go back main menu ...");
 
 			ConsoleKeyInfo keyInfo = Console.ReadKey(true);
 			ConsoleKey keyPressed = keyInfo.Key;
@@ -454,6 +606,7 @@ Welcome to the Student Management System ! What would you like to do ?
 					users.RemoveAt(selectedIndex);
 				}
 			}
+			Console.Clear();
 			RunMainMenu();
 		}
 		// Main Menu
@@ -475,8 +628,7 @@ Welcome to the Student Management System ! What would you like to do ?
 
 			 */
 
-
-			Console.WriteLine("FirstName\tLastName\tDateOfBirth\tAddress\tModules");
+			Console.WriteLine("FirstName\tLastName\tDateOfBirth\tAddress\t\t\tModules\t\t\tGPA");
 			foreach (User user in users)
 			{
 				string modules_str = "";
@@ -485,17 +637,42 @@ Welcome to the Student Management System ! What would you like to do ?
 					modules_str += mod.Name;
 					modules_str += " ";
 				}
-
-				Console.WriteLine($"{user.FirstName}\t{user.LastName}\t\t{user.DateOfBirth}\t{user.Address}\t{modules_str}");
+				double GPA=CalcGPA(user);
+				Console.WriteLine($"{user.FirstName}\t\t{user.LastName}\t\t{user.DateOfBirth}\t{user.Address}\t\t{modules_str}\t{GPA}");
 			}
 
 
 
 			Console.WriteLine("\npress any key to go back to main menu...");
 			Console.ReadKey(true);
+			Console.Clear();
 			RunMainMenu();
 		}
 		// Main Menu
+		double CalcGPA(User user)
+		{
+			var grades = new Dictionary<string, double>()
+			{
+				{"A",4.0 },
+				{"A-",3.7 },
+				{"B+",3.3 },
+				{"B",3.0 },
+				{"B-",2.7 },
+				{"C+",2.3 },
+				{"C",2.0 },
+				{"C-",1.7 },
+				{"F",0 }
+			}; 
+			double GPA=0,TotalCredits=0,EarnedCredits=0;
+			foreach(Module mod in user.Modules)
+			{
+				double modCredVal = Convert.ToDouble(mod.CreditValue);
+				TotalCredits += modCredVal;
+				EarnedCredits += modCredVal * grades[mod.GradePoint] / 4;
+			}
+			GPA = (EarnedCredits / TotalCredits) * 4;
+			return GPA;
+		}
 		private void Quit()
 		{
 

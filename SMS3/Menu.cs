@@ -47,6 +47,7 @@ namespace SMS3
 			}
 			Console.ResetColor();
 			Console.WriteLine("\nWatch my progress of project with source code :) https://github.com/PasanAbeysekara/StudentManagementSystem");
+			
 		}
 
 		public int Run()
@@ -92,17 +93,17 @@ namespace SMS3
 					Console.BackgroundColor = ConsoleColor.Black;
 					string prefix;
 
-					if (i == SelectedIndex)
-					{
-						Console.ForegroundColor = ConsoleColor.Black;
-						Console.BackgroundColor = ConsoleColor.White;
-						prefix = $"*";
-					}
-					else if (SelectedIndexes.Contains(i))
+					if (SelectedIndexes.Contains(i))
 					{
 						Console.ForegroundColor = ConsoleColor.Blue;
 						Console.BackgroundColor = ConsoleColor.White;
 						prefix = "$";
+					}
+					else if (i == SelectedIndex)
+					{
+						Console.ForegroundColor = ConsoleColor.Black;
+						Console.BackgroundColor = ConsoleColor.White;
+						prefix = $"*";
 					}
 					else
 					{
@@ -135,6 +136,7 @@ namespace SMS3
 				}
 
 			} while (!SelectedIndexes.Contains(Options.Count-1));
+
 			SelectedIndexes.Remove(Options.Count-1);
 
 			List<int> res= new List<int>();
