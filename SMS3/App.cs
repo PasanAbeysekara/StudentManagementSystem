@@ -37,10 +37,11 @@ namespace SMS3
 		public void RunMainMenu()
 		{
 			string prompt = @"
- __                                                __            
-(_ |_    _| _ _ |_  |\/| _  _  _  _  _ _  _ _ |_  (_    _|_ _ _  
-__)|_|_|(_|(-| )|_  |  |(_|| )(_|(_)(-|||(-| )|_  __)\/_)|_(-||| 
-                                 _/                  /           
+
+█▀ ▀█▀ █░█ █▀▄ █▀▀ █▄░█ ▀█▀   █▀▄▀█ ▄▀█ █▄░█ ▄▀█ █▀▀ █▀▀ █▀▄▀█ █▀▀ █▄░█ ▀█▀   █▀ █▄█ █▀ ▀█▀ █▀▀ █▀▄▀█
+▄█ ░█░ █▄█ █▄▀ ██▄ █░▀█ ░█░   █░▀░█ █▀█ █░▀█ █▀█ █▄█ ██▄ █░▀░█ ██▄ █░▀█ ░█░   ▄█ ░█░ ▄█ ░█░ ██▄ █░▀░█
+
+
 Welcome to the Student Management System !
 
 (Use the arrow keys to cycle through options and press enter to select an option.)
